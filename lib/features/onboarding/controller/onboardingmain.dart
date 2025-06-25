@@ -1,3 +1,4 @@
+import 'package:ecommerce/features/authentication/views/login.dart';
 import 'package:ecommerce/features/onboarding/views/onboardingwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -54,6 +55,11 @@ class _OnboardingmainState extends State<Onboardingmain> {
     }
   }
 
+  // method to go to login page after finish appears
+  void _finishButton() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -77,7 +83,7 @@ class _OnboardingmainState extends State<Onboardingmain> {
             ),
             onPageChanged: (index) => {
               setState(() {
-                currentIndex + 1;
+                currentIndex = index;
               }),
             },
           ),
@@ -86,12 +92,19 @@ class _OnboardingmainState extends State<Onboardingmain> {
           Positioned(
             right: 15,
             bottom: 30,
-            child: FloatingActionButton(
-              shape: CircleBorder(),
-              backgroundColor: Colors.red.shade400,
-              onPressed: _nextPage,
-              child: Icon(Icons.arrow_right_alt, size: 30),
-            ),
+            child: currentIndex == onBoardingScreenInfo.length - 1
+                ? FloatingActionButton(
+                    shape: CircleBorder(),
+                    backgroundColor: Colors.red.shade400,
+                    onPressed: _finishButton,
+                    child: Icon(Icons.arrow_right_alt, size: 30),
+                  )
+                : FloatingActionButton(
+                    shape: CircleBorder(),
+                    backgroundColor: Colors.red.shade400,
+                    onPressed: _nextPage,
+                    child: Icon(Icons.arrow_right_alt, size: 30),
+                  ),
           ),
 
           // skip button
