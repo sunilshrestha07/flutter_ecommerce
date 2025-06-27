@@ -21,15 +21,47 @@ class ItemScrollTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                height: 300,
-                width: 240,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(allItems.image.toString(), fit: BoxFit.cover),
-                  // child: Image.assets("assets/images/homepage.jpg", fit: BoxFit.cover),
-                ),
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    height: 300,
+                    width: 240,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(allItems.image.toString(), fit: BoxFit.cover),
+                      // child: Image.assets("assets/images/homepage.jpg", fit: BoxFit.cover),
+                    ),
+                  ),
+                  Positioned(
+                    top: 7,
+                    left: 7,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: allItems.sale! ? Colors.red : Colors.black,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: allItems.sale!
+                          ? Text(
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                              " -" + allItems.discount.toString() + " %",
+                            )
+                          : Text(
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                              "  New ",
+                            ),
+                    ),
+                  ),
+                ],
               ),
               // about the item info card
               SizedBox(height: 5),
@@ -60,19 +92,18 @@ class ItemScrollTile extends StatelessWidget {
 
                   Row(
                     children: [
+                      // Text(
+                      //   textAlign: TextAlign.end,
+                      //   style: TextStyle(
+                      //     fontSize: 18,
+                      //     color: const Color.fromARGB(255, 118, 124, 127),
+                      //     fontWeight: FontWeight.w600,
+                      //     decoration: TextDecoration.lineThrough,
+                      //   ),
+                      //   allItems.price.toString(),
+                      // ),
+                      // SizedBox(width: 20),
                       Text(
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: const Color.fromARGB(255, 118, 124, 127),
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                        allItems.price.toString(),
-                      ),
-                      SizedBox(width: 20),
-                      Text(
-                        textAlign: TextAlign.end,
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.red[700],

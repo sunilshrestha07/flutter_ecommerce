@@ -16,6 +16,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<itemsModel> _allItems = [];
+  List<itemsModel> _saleItems = [];
+  List<itemsModel> _newItems = [];
   bool isFetching = false;
 
   // fetch data
@@ -32,13 +34,20 @@ class _HomeState extends State<Home> {
         final List itemList = data['dress'];
         setState(() {
           _allItems = itemList.map((json) => itemsModel.fromJson(json)).toList();
+          for (int i = 0; i <= _allItems.length; i++) {
+            if (_allItems[i].sale == false) {
+              _newItems.add(_allItems[i]);
+            } else {
+              _saleItems.add(_allItems[i]);
+            }
+          }
           isFetching = false;
 
           //adding for statemanagment
-          final itemProvider = Provider.of<Hiveprovider>(context, listen: false);
-          for (var item in _allItems) {
-            itemProvider.add(item);
-          }
+          // final itemProvider = Provider.of<Hiveprovider>(context, listen: false);
+          // for (var item in _allItems) {
+          //   itemProvider.add(item);
+          // }
         });
       } else {
         debugPrint("Error fetching data");
@@ -138,53 +147,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
 
-                    // dynamic content for the product with scroll
-                    SizedBox(height: 20),
-                    // new arrivale title
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                style: TextStyle(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                "New",
-                              ),
-                              InkWell(
-                                child: Text(
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blueGrey[500],
-                                  ),
-                                  "View all",
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text("You've never seen it before!"),
-                        ],
-                      ),
-                    ),
-                    // scroll using the listview for the new produts
-                    SizedBox(height: 30),
-                    SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                        cacheExtent: 5000,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _allItems.length,
-                        itemBuilder: (context, index) =>
-                            ItemScrollTile(allItems: _allItems[index]),
-                      ),
-                    ),
-
+                    // sale category part
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -217,17 +180,130 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10),
                     SizedBox(
                       height: 400,
                       child: ListView.builder(
                         cacheExtent: 5000,
                         scrollDirection: Axis.horizontal,
-                        itemCount: _allItems.length,
+                        itemCount: _saleItems.length,
                         itemBuilder: (context, index) =>
-                            ItemScrollTile(allItems: _allItems[index]),
+                            ItemScrollTile(allItems: _saleItems[index]),
                       ),
                     ),
-                    // scroll using the listview for the new produts
+
+                    //new arrival herosecion
+                    SizedBox(height: 20),
+                    Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 9 / 11,
+
+                          child: Image.asset(
+                            alignment: Alignment.topCenter,
+                            fit: BoxFit.cover,
+
+                            "assets/images/sale.jpeg",
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 20,
+                          left: 10,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 60,
+                                    height: 0.9,
+                                  ),
+                                  "Fashion",
+                                ),
+                                Text(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 60,
+                                    height: 1,
+                                  ),
+                                  "Sale ",
+                                ),
+                                SizedBox(height: 5),
+                                TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.all(Colors.red),
+                                  ),
+                                  onPressed: () {},
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 1,
+                                    ),
+                                    child: Text(
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                      "Check",
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    //new cartegory section
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                "New",
+                              ),
+                              InkWell(
+                                child: Text(
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blueGrey[500],
+                                  ),
+                                  "View all",
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text("You've never seen it before!"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 400,
+                      child: ListView.builder(
+                        cacheExtent: 5000,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _newItems.length,
+                        itemBuilder: (context, index) =>
+                            ItemScrollTile(allItems: _newItems[index]),
+                      ),
+                    ),
                   ],
                 ),
               ),
