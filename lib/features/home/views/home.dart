@@ -227,7 +227,6 @@ class _HomeState extends State<Home> {
                             ItemScrollTile(allItems: _allItems[index]),
                       ),
                     ),
-                    Text(itemProvider.items.map((e) => e.name).join(' ')),
                     // scroll using the listview for the new produts
                   ],
                 ),
