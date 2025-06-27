@@ -14,7 +14,7 @@ class AppTheme {
       bodyMedium: TextStyle(color: Colors.black),
       displayLarge: TextStyle(color: Colors.black),
       displaySmall: TextStyle(color: Colors.black),
-      displayMedium: TextStyle(color: Colors.green), // 👈 input text color
+      displayMedium: TextStyle(color: Colors.black),
     ),
     iconTheme: IconThemeData(color: Colors.black),
     tabBarTheme: TabBarThemeData(indicatorColor: Colors.black),
@@ -23,6 +23,13 @@ class AppTheme {
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
     ),
+    buttonTheme: ButtonThemeData(
+      colorScheme: ColorScheme.light(primary: const Color.fromARGB(255, 243, 95, 84)),
+    ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+      selectedItemColor: Colors.red[400],
+    ),
   );
 
   // darkthem colors
@@ -30,7 +37,7 @@ class AppTheme {
     useMaterial3: true,
     colorScheme: darkColorSchema,
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFF121212),
       elevation: 0,
       iconTheme: IconThemeData(color: Colors.white),
     ),
@@ -45,6 +52,11 @@ class AppTheme {
       hintStyle: TextStyle(color: Colors.white),
       enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+      outlineBorder: BorderSide(color: Colors.white),
+      activeIndicatorBorder: BorderSide(color: Colors.white),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: const Color.fromARGB(255, 227, 110, 101)),
+      ),
       labelStyle: TextStyle(color: Colors.white),
     ),
   );

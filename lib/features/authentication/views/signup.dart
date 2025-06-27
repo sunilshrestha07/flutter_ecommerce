@@ -1,32 +1,27 @@
-import 'package:ecommerce/features/authentication/views/forgot.dart';
-// import 'package:ecommerce/features/authentication/views/signup.dart';
-import 'package:ecommerce/features/home/views/homepage.dart';
+import 'package:ecommerce/features/authentication/views/login.dart';
 import 'package:flutter/material.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
 
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   // handel form submition
   void handelSubmit() {
-    // final email = _emailController.text.trim();
-    // final password = _passwordController.text.trim();
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-    // debugPrint(" $email , $password");
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Homepage()),
-    );
+    debugPrint("$name , $email , $password");
   }
 
   @override
@@ -42,7 +37,7 @@ class _LoginState extends State<Login> {
             children: [
               Text(
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                "Login In",
+                "Sign Up",
                 textAlign: TextAlign.left,
               ),
               SizedBox(height: 50),
@@ -51,6 +46,19 @@ class _LoginState extends State<Login> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    TextFormField(
+                      controller: _nameController,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium, //textTheme bata bodyMedium ko color use garya
+                      decoration: InputDecoration(hintText: "Name"),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Name is required";
+                        }
+                        return null;
+                      },
+                    ),
                     SizedBox(height: 30),
 
                     TextFormField(
@@ -82,7 +90,9 @@ class _LoginState extends State<Login> {
                         return null;
                       },
                     ),
+
                     SizedBox(height: 30),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -90,11 +100,11 @@ class _LoginState extends State<Login> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Forgot()),
+                              MaterialPageRoute(builder: (context) => Login()),
                             );
                           },
                           child: Text(
-                            "Forgot Password",
+                            "Already have an account?",
                             style: TextStyle(
                               color: const Color.fromARGB(255, 243, 95, 84),
                             ),
@@ -107,7 +117,9 @@ class _LoginState extends State<Login> {
                         ),
                       ],
                     ),
+
                     SizedBox(height: 40),
+
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -123,7 +135,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         onPressed: handelSubmit,
-                        child: Text("Login"),
+                        child: Text("Sign up"),
                       ),
                     ),
                     SizedBox(height: 60),

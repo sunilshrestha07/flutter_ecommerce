@@ -1,4 +1,4 @@
-import 'package:ecommerce/features/authentication/views/login.dart';
+import 'package:ecommerce/features/authentication/views/signup.dart';
 import 'package:ecommerce/features/onboarding/views/onboardingwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -57,7 +57,7 @@ class _OnboardingmainState extends State<Onboardingmain> {
 
   // method to go to login page after finish appears
   void _finishButton() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Signup()));
   }
 
   @override
