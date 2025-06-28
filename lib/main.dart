@@ -1,5 +1,6 @@
 import 'package:ecommerce/common/hiveProvider/hiveprovider.dart';
-import 'package:ecommerce/features/home/views/homepage.dart';
+// import 'package:ecommerce/features/home/views/homepage.dart';
+import 'package:ecommerce/features/onboarding/controller/onboardingmain.dart';
 // import 'package:ecommerce/features/onboarding/controller/onboardingmain.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,8 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        // home: Onboardingmain(),
-        home: Homepage(),
+        home: Onboardingmain(),
+        // home: Homepage(),
       ),
     );
   }

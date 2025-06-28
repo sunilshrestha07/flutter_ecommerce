@@ -9,7 +9,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<Hiveprovider>(
-      builder: (context, itemProvider, child) => Scaffold(
+      builder: (context, itemProvider, _) => Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -17,7 +17,11 @@ class Home extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    filterQuality: FilterQuality.low,
+                    height: 500,
+                    cacheHeight: 500,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.medium,
                     "assets/images/homeImage.jpeg",
                   ),
                   Positioned(
