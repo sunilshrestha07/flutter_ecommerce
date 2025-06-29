@@ -1,5 +1,6 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
+import 'package:ecommerce/common/widgets/specific_item_comments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -16,6 +17,7 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
   String selectedColor = "Black";
   List<String> itemSizesOptions = ["XXL", "XL", "L", "M"];
   List<String> itemColorOptions = ["Black", "White", "Blue"];
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.3;
@@ -187,7 +189,10 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
               ),
             ),
 
-            // discription and add to cart and buy options
+            SizedBox(height: 20),
+
+            // review and ratings
+            SpecificItemComments(sId: widget.item.sId, rating: widget.item.rating),
           ],
         ),
       ),

@@ -85,7 +85,11 @@ class ItemScrollTile extends StatelessWidget {
                               const Icon(Icons.star, color: Colors.amberAccent, size: 25),
                         ),
                       ),
-                      Text(allItems.rating.toString()),
+                      SizedBox(width: 3),
+                      Text(
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        allItems.rating.toString(),
+                      ),
                     ],
                   ),
 
