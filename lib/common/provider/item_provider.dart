@@ -1,7 +1,7 @@
 import 'package:ecommerce/common/model/itemModel.dart';
 import 'package:flutter/material.dart';
 
-class Hiveprovider extends ChangeNotifier {
+class ItemProvider extends ChangeNotifier {
   List<itemsModel> saleItems = [];
   List<itemsModel> newItems = [];
 

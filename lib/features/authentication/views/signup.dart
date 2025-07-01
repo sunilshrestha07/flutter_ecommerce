@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:ecommerce/features/authentication/views/login.dart';
+import 'package:ecommerce/features/authentication/views/validate.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -9,6 +13,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  bool isLogging = false;
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
@@ -16,12 +21,54 @@ class _SignupState extends State<Signup> {
   final _passwordController = TextEditingController();
 
   // handel form submition
-  void handelSubmit() {
+  Future handelSubmit() async {
+    setState(() {
+      isLogging = true;
+    });
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    debugPrint("$name , $email , $password");
+    final Map<String, dynamic> formData = {
+      "userName": name,
+      "email": email,
+      "password": password,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse("https://fashion-fusion-suneel.vercel.app/api/user/signup"),
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(formData),
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          isLogging = false;
+        });
+        Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => Validate(email: email)),
+        );
+      } else {
+        setState(() {
+          isLogging = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: const Color.fromARGB(255, 230, 87, 77),
+              content: Text("Error signing up! please try again"),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLogging = false;
+      });
+      debugPrint("Error signup $e");
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error $e")));
+    }
   }
 
   @override
@@ -135,7 +182,15 @@ class _SignupState extends State<Signup> {
                           ),
                         ),
                         onPressed: handelSubmit,
-                        child: Text("Sign up"),
+                        //  () async {
+                        //   if (_formKey.currentState != null &&
+                        //       _formKey.currentState!.validate()) {
+                        //     await handelSubmit();
+                        //   }
+                        // },
+                        child: isLogging
+                            ? Center(child: CircularProgressIndicator())
+                            : Text("Sign up"),
                       ),
                     ),
                     SizedBox(height: 60),

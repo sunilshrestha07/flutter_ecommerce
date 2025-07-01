@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import 'package:ecommerce/common/hiveProvider/hiveprovider.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
+import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/cart/views/cart.dart';
 import 'package:ecommerce/features/home/views/home.dart';
 import 'package:ecommerce/features/profile/views/profile.dart';
@@ -36,7 +35,7 @@ class _HomepageState extends State<Homepage> {
         final List itemList = data['dress'];
         setState(() {
           _allItems = itemList.map((json) => itemsModel.fromJson(json)).toList();
-          final itemProvider = Provider.of<Hiveprovider>(context, listen: false);
+          final itemProvider = Provider.of<ItemProvider>(context, listen: false);
           for (var item in _allItems) {
             if (item.sale == false) {
               itemProvider.addNewItems(item); // Add only this item
@@ -53,6 +52,7 @@ class _HomepageState extends State<Homepage> {
         setState(() {
           isFetching = false;
         });
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.red[200],

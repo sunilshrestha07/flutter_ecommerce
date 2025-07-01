@@ -1,5 +1,5 @@
-import 'package:ecommerce/common/hiveProvider/hiveprovider.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
+import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/common/widgets/specifici_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ class ItemScrollTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Hiveprovider>(
+    return Consumer<ItemProvider>(
       builder: (context, itemProvider, child) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         // decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),

@@ -1,5 +1,5 @@
-import 'package:ecommerce/common/hiveProvider/hiveprovider.dart';
-import 'package:ecommerce/features/onboarding/controller/onboardingmain.dart';
+import 'package:ecommerce/app_home.dart';
+import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
-  await Hive.openBox("itemsBox");
+  await Hive.openBox("userHiveBox");
   runApp(const MyApp());
 }
 
@@ -19,13 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => Hiveprovider())],
+      providers: [ChangeNotifierProvider(create: (context) => ItemProvider())],
       child: MaterialApp(
         themeMode: ThemeMode.light,
         theme: AppTheme.lightTheme,
         debugShowCheckedModeBanner: false,
-        home: Onboardingmain(),
-        // home: Homepage(),
+        home: AppHome(),
       ),
     );
   }
