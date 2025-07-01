@@ -48,10 +48,11 @@ class _ValidateState extends State<Validate> {
       if (response.statusCode == 200) {
         _userHiveBox.add({"isLoggedIn": true});
         isValidating = false;
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(builder: (context) => Homepage()),
+          (Route<dynamic> route) => false,
         );
       } else {
         debugPrint("Error validation");

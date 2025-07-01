@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:ecommerce/features/authentication/views/forgot.dart';
-// import 'package:ecommerce/features/authentication/views/signup.dart';
 import 'package:ecommerce/features/home/views/homepage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,22 +14,59 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool isLogging = false;
   final _formKey = GlobalKey<FormState>();
+  final _userHiveBox = Hive.box("userHiveBox");
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   // handel form submition
-  void handelSubmit() {
-    // final email = _emailController.text.trim();
-    // final password = _passwordController.text.trim();
+  Future handelSubmit() async {
+    setState(() {
+      isLogging = true;
+    });
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
-    // debugPrint(" $email , $password");
+    final Map<String, dynamic> formData = {"email": email, "password": password};
+    try {
+      final response = await http.post(
+        Uri.parse("https://fashion-fusion-suneel.vercel.app/api/user/login"),
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(formData),
+      );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Homepage()),
-    );
+      if (response.statusCode == 200) {
+        _userHiveBox.put('isLoggedIn', true);
+        setState(() {
+          isLogging = false;
+        });
+        Navigator.pushAndRemoveUntil(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => Homepage()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        debugPrint("error loggingin");
+        setState(() {
+          isLogging = false;
+        });
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Credential Error ${response.statusCode}")),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        isLogging = false;
+      });
+      ScaffoldMessenger.of(
+        // ignore: use_build_context_synchronously
+        context,
+      ).showSnackBar(SnackBar(content: Text("$e")));
+    }
   }
 
   @override
@@ -76,8 +116,8 @@ class _LoginState extends State<Login> {
                           .bodyMedium, //textTheme bata bodyMedium ko color use garya
                       decoration: InputDecoration(hintText: "Password"),
                       validator: (value) {
-                        if (value == null || value.length < 6 || value.isEmpty) {
-                          return "Password is required and should be minimum 6 charatcter";
+                        if (value == null || value.isEmpty) {
+                          return "Password is required ";
                         }
                         return null;
                       },
@@ -122,8 +162,15 @@ class _LoginState extends State<Login> {
                             Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        onPressed: handelSubmit,
-                        child: Text("Login"),
+                        onPressed: () async {
+                          if (_formKey.currentState != null &&
+                              _formKey.currentState!.validate()) {
+                            await handelSubmit();
+                          }
+                        },
+                        child: isLogging
+                            ? Center(child: CircularProgressIndicator())
+                            : Text("Login"),
                       ),
                     ),
                     SizedBox(height: 60),

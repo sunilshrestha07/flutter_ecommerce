@@ -181,13 +181,12 @@ class _SignupState extends State<Signup> {
                             Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        onPressed: handelSubmit,
-                        //  () async {
-                        //   if (_formKey.currentState != null &&
-                        //       _formKey.currentState!.validate()) {
-                        //     await handelSubmit();
-                        //   }
-                        // },
+                        onPressed: () async {
+                          if (_formKey.currentState != null &&
+                              _formKey.currentState!.validate()) {
+                            await handelSubmit();
+                          }
+                        },
                         child: isLogging
                             ? Center(child: CircularProgressIndicator())
                             : Text("Sign up"),
