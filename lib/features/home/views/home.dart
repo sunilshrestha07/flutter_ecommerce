@@ -21,7 +21,6 @@ class Home extends StatelessWidget {
                     cacheHeight: 500,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    filterQuality: FilterQuality.medium,
                     "assets/images/homeImage.jpeg",
                   ),
                   Positioned(
@@ -127,7 +126,6 @@ class Home extends StatelessWidget {
                     child: Image.asset(
                       alignment: Alignment.topCenter,
                       fit: BoxFit.cover,
-                      filterQuality: FilterQuality.low,
                       "assets/images/new.jpeg",
                     ),
                   ),
