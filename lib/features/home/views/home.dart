@@ -18,7 +18,7 @@ class Home extends StatelessWidget {
                 children: [
                   Image.asset(
                     height: 500,
-                    cacheHeight: 500,
+                    // cacheHeight: 500,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     "assets/images/homeImage.jpeg",

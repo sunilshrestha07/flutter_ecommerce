@@ -110,6 +110,7 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 30),
 
                     TextFormField(
+                      obscureText: true,
                       controller: _passwordController,
                       style: Theme.of(context)
                           .textTheme

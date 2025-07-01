@@ -125,6 +125,7 @@ class _SignupState extends State<Signup> {
                     SizedBox(height: 30),
 
                     TextFormField(
+                      obscureText: true,
                       controller: _passwordController,
                       style: Theme.of(context)
                           .textTheme
