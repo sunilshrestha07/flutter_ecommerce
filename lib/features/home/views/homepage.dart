@@ -37,6 +37,7 @@ class _HomepageState extends State<Homepage> {
           _allItems = itemList.map((json) => itemsModel.fromJson(json)).toList();
           final itemProvider = Provider.of<ItemProvider>(context, listen: false);
           for (var item in _allItems) {
+            itemProvider.addAllItems(item);
             if (item.sale == false) {
               itemProvider.addNewItems(item); // Add only this item
             } else {
