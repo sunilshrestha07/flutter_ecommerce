@@ -152,6 +152,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
               : ListView.builder(
                   cacheExtent: 1000,
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: allReviews.length,
                   itemBuilder: (context, index) => Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),
@@ -240,6 +241,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
                                 width: double.infinity,
                                 height: double.infinity,
                                 fit: BoxFit.cover,
+                                filterQuality: FilterQuality.low,
                                 allReviews[index].userImage.toString(),
                               ),
                             ),

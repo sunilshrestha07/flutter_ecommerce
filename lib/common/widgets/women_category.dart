@@ -16,7 +16,7 @@ class _WomenCategoryState extends State<WomenCategory> {
     return Consumer<ItemProvider>(
       builder: (context, itemProvider, _) {
         final filteredItems = itemProvider.allItems
-            .where((item) => item.category == "male")
+            .where((item) => item.category == "female")
             .toList();
         return Expanded(
           child: GridView.builder(
