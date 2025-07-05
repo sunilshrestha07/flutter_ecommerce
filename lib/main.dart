@@ -1,15 +1,24 @@
 import 'package:ecommerce/app_home.dart';
+import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart' as path;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
+  // find the path of the app
+  final dir = await path.getApplicationDocumentsDirectory();
+  // initialize the hive
+  await Hive.initFlutter(dir.path);
+  // register the adapter for the cartitem
+  Hive.registerAdapter<CartItemModel>(CartItemAdapter());
 
+  // create boxes of hive
   await Hive.openBox("userHiveBox");
+  await Hive.openBox<CartItemModel>("cartItemBox");
   runApp(const MyApp());
 }
 

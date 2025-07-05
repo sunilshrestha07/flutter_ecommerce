@@ -1,8 +1,10 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
 import 'package:ecommerce/common/widgets/specific_item_comments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SpecificiItemWidget extends StatefulWidget {
   final itemsModel item;
@@ -18,6 +20,38 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
   List<String> itemSizesOptions = ["XXL", "XL", "L", "M"];
   List<String> itemColorOptions = ["Black", "White", "Blue"];
 
+  // create the box for the items to read and store
+  final _cartBox = Hive.box<CartItemModel>("cartItemBox");
+
+  //handel add to cart
+  void addToCart(itemsModel item) async {
+    final newItem = CartItemModel(
+      sId: item.sId,
+      name: item.name,
+      image: item.image,
+      description: item.description,
+      price: item.price,
+      discount: item.discount,
+      category: item.category,
+      sale: item.sale,
+      rating: item.rating,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      itemCount: 1,
+    );
+
+    final key = item.sId;
+
+    // if same item exist increase the item count else add to the box
+    if (_cartBox.containsKey(key)) {
+      final existingItem = _cartBox.get(key);
+      existingItem!.itemCount = (existingItem.itemCount ?? 1) + 1;
+      await existingItem.save();
+    } else {
+      _cartBox.put(key, newItem);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     timeDilation = 1.3;
@@ -30,14 +64,36 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
               children: [
                 AspectRatio(
                   aspectRatio: 4 / 5.4,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Image.network(
-                      widget.item.image.toString(),
-                      fit: BoxFit.cover,
-                      filterQuality: FilterQuality.medium,
-                    ),
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Image.network(
+                          widget.item.image.toString(),
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.medium,
+                        ),
+                      ),
+
+                      Positioned(
+                        top: 50,
+                        left: 20,
+
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(1000),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -172,14 +228,14 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                             minimumSize: WidgetStateProperty.all(Size(130, 50)),
                             backgroundColor: WidgetStateProperty.all(Colors.black),
                           ),
-                          onPressed: () {},
+                          onPressed: () => addToCart(widget.item),
                           child: Text(
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                               color: Colors.white,
                             ),
-                            "Buy Now",
+                            "Add To Cart",
                           ),
                         ),
                       ],
