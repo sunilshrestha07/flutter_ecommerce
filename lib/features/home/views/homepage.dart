@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/cart/views/cart.dart';
@@ -7,7 +6,6 @@ import 'package:ecommerce/features/home/views/home.dart';
 import 'package:ecommerce/features/profile/views/profile.dart';
 import 'package:ecommerce/features/store/views/store.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 

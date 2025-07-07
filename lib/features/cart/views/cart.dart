@@ -11,7 +11,9 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   final _cartBox = Hive.box<CartItemModel>("cartItemBox");
+  bool isSelected = false;
   List<CartItemModel> _allListInHive = [];
+  List<CartItemModel> _selectedItem = [];
 
   // method to clear cart
   void clearCart() async {
@@ -21,13 +23,56 @@ class _CartState extends State<Cart> {
     });
   }
 
+  // handel the item count increase
+  void increaseItemCount(key) async {
+    final existingItem = _cartBox.get(key);
+    existingItem!.itemCount = (existingItem.itemCount ?? 1) + 1;
+    await existingItem.save();
+    setState(() {});
+  }
+
+  // handel item selected
+  void handelItemSelect(item, value) {
+    if (_selectedItem.contains(item)) {
+      _selectedItem.remove(item);
+    } else {
+      _selectedItem.add(item);
+    }
+    setState(() {});
+  }
+
+  // handel the item count increase
+  void decreaseItemCount(key) async {
+    final existingItem = _cartBox.get(key);
+    if (existingItem == null) return;
+
+    final currentCount = existingItem.itemCount ?? 1;
+
+    if (currentCount > 1) {
+      existingItem.itemCount = currentCount - 1;
+      await existingItem.save();
+      setState(() {});
+    } else {
+      await _cartBox.delete(key);
+      setState(() {
+        _allListInHive = _cartBox.values.toList();
+      });
+    }
+  }
+
+  // calcualte the total amount for checkout
+  double getTotalAmount() {
+    return _selectedItem
+        .map((item) => (item.itemCount ?? 0) * (item.price ?? 0.0))
+        .fold(0.0, (item, element) => item + element);
+  }
+
   @override
   void initState() {
     super.initState();
     setState(() {
       _allListInHive = _cartBox.values.toList();
     });
-    print(_allListInHive.length);
   }
 
   @override
@@ -49,102 +94,186 @@ class _CartState extends State<Cart> {
       body: Column(
         children: [
           Expanded(
-            flex: 8,
+            flex: 7,
             child: ListView.builder(
               shrinkWrap: false,
               itemCount: _allListInHive.length,
               itemBuilder: (context, index) {
+                // final selectedItemTotal = _selectedItem[index];
                 final item = _allListInHive[index];
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 227, 227, 227),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      children: [
-                        Checkbox(value: true, onChanged: (e) {}),
-                        SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: Image.network(
-                            alignment: Alignment.topCenter,
-                            fit: BoxFit.cover,
-                            item.image.toString(),
-                          ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 227, 227, 227),
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        SizedBox(width: 5),
-                        Column(
-                          // mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        margin: EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
                           children: [
-                            Text(
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                              overflow: TextOverflow.ellipsis,
-                              item.name.toString(),
+                            Checkbox(
+                              value: _selectedItem.contains(item),
+                              onChanged: (value) {
+                                handelItemSelect(item, value);
+                              },
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(255, 96, 96, 96),
-                                    fontSize: 13,
-                                  ),
-                                  "Color : Black",
-                                ),
-                                SizedBox(width: 15),
-                                Text(
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(255, 96, 96, 96),
-                                    fontSize: 13,
-                                  ),
-                                  "Size : L",
-                                ),
-                              ],
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Image.network(
+                                alignment: Alignment.topCenter,
+                                fit: BoxFit.cover,
+                                item.image.toString(),
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.remove),
+                            SizedBox(width: 5),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FractionallySizedBox(
+                                    widthFactor: 0.9,
+                                    child: Text(
+                                      textAlign: TextAlign.left,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      overflow: TextOverflow.clip,
+                                      item.name.toString(),
                                     ),
-                                    SizedBox(width: 4),
-                                    Text(item.itemCount.toString()),
-                                    SizedBox(width: 4),
-                                    IconButton(onPressed: () {}, icon: Icon(Icons.add)),
-                                  ],
-                                ),
-                                SizedBox(width: 50),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(size: 14, Icons.currency_rupee_rounded),
-                                    Text(
-                                      style: TextStyle(fontWeight: FontWeight.w600),
-                                      item.price.toString(),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(255, 96, 96, 96),
+                                          fontSize: 13,
+                                        ),
+                                        "Color : Black",
+                                      ),
+                                      SizedBox(width: 15),
+                                      Text(
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(255, 96, 96, 96),
+                                          fontSize: 13,
+                                        ),
+                                        "Size : L",
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          IconButton(
+                                            onPressed: () => decreaseItemCount(item.sId),
+                                            icon: Icon(Icons.remove),
+                                          ),
+                                          SizedBox(width: 4),
+                                          Text(item.itemCount.toString()),
+                                          SizedBox(width: 4),
+                                          IconButton(
+                                            onPressed: () => increaseItemCount(item.sId),
+                                            icon: Icon(Icons.add),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: 50),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(size: 14, Icons.currency_rupee_rounded),
+                                            Text(
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              "${(item.price ?? 0) * (item.itemCount ?? 0)}",
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 6,
+                        right: 0,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(size: 20, color: Colors.red, Icons.delete_outline),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
             ),
           ),
-          Expanded(flex: 1, child: Container(color: Colors.green)),
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 224, 224, 224),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                          "Total amount:",
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(size: 20, Icons.currency_rupee),
+                            Text(
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                              getTotalAmount().toStringAsFixed(1),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Expanded(
+                      child: SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                        child: FilledButton(onPressed: () {}, child: Text("data")),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
