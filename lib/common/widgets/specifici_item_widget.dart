@@ -15,9 +15,9 @@ class SpecificiItemWidget extends StatefulWidget {
 }
 
 class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
-  String selectedSize = "Size";
+  String selectedSize = "M";
   String selectedColor = "Black";
-  List<String> itemSizesOptions = ["XXL", "XL", "L", "M"];
+  List<String> itemSizesOptions = ["M", "L", "XL", "XXL"];
   List<String> itemColorOptions = ["Black", "White", "Blue"];
 
   // create the box for the items to read and store
@@ -38,6 +38,8 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       itemCount: 1,
+      color: selectedColor,
+      size: selectedSize,
     );
 
     final key = item.sId;

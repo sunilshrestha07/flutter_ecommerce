@@ -67,6 +67,15 @@ class _CartState extends State<Cart> {
         .fold(0.0, (item, element) => item + element);
   }
 
+  //remove specific element from the hive
+  void removeSpecificItem(key, item) async {
+    await _cartBox.delete(key);
+    _selectedItem.remove(item);
+    setState(() {
+      _allListInHive = _cartBox.values.toList();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,191 +100,227 @@ class _CartState extends State<Cart> {
         ],
       ),
 
-      body: Column(
-        children: [
-          Expanded(
-            flex: 7,
-            child: ListView.builder(
-              shrinkWrap: false,
-              itemCount: _allListInHive.length,
-              itemBuilder: (context, index) {
-                // final selectedItemTotal = _selectedItem[index];
-                final item = _allListInHive[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 227, 227, 227),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        margin: EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
+      body: _allListInHive.isEmpty
+          ? Center(
+              child: Text(
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                "No product in the cart !",
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: ListView.builder(
+                    shrinkWrap: false,
+                    itemCount: _allListInHive.length,
+                    itemBuilder: (context, index) {
+                      final item = _allListInHive[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
                           children: [
-                            Checkbox(
-                              value: _selectedItem.contains(item),
-                              onChanged: (value) {
-                                handelItemSelect(item, value);
-                              },
-                            ),
-                            SizedBox(
-                              height: 100,
-                              width: 100,
-                              child: Image.network(
-                                alignment: Alignment.topCenter,
-                                fit: BoxFit.cover,
-                                item.image.toString(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 227, 227, 227),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                            ),
-                            SizedBox(width: 5),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              margin: EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
                                 children: [
-                                  FractionallySizedBox(
-                                    widthFactor: 0.9,
-                                    child: Text(
-                                      textAlign: TextAlign.left,
-                                      softWrap: true,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      overflow: TextOverflow.clip,
-                                      item.name.toString(),
+                                  Checkbox(
+                                    value: _selectedItem.contains(item),
+                                    onChanged: (value) {
+                                      handelItemSelect(item, value);
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.network(
+                                      alignment: Alignment.topCenter,
+                                      fit: BoxFit.cover,
+                                      item.image.toString(),
                                     ),
                                   ),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(255, 96, 96, 96),
-                                          fontSize: 13,
-                                        ),
-                                        "Color : Black",
-                                      ),
-                                      SizedBox(width: 15),
-                                      Text(
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(255, 96, 96, 96),
-                                          fontSize: 13,
-                                        ),
-                                        "Size : L",
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () => decreaseItemCount(item.sId),
-                                            icon: Icon(Icons.remove),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        FractionallySizedBox(
+                                          widthFactor: 0.9,
+                                          child: Text(
+                                            textAlign: TextAlign.left,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            overflow: TextOverflow.clip,
+                                            item.name.toString(),
                                           ),
-                                          SizedBox(width: 4),
-                                          Text(item.itemCount.toString()),
-                                          SizedBox(width: 4),
-                                          IconButton(
-                                            onPressed: () => increaseItemCount(item.sId),
-                                            icon: Icon(Icons.add),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(width: 50),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
                                         ),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Icon(size: 14, Icons.currency_rupee_rounded),
                                             Text(
                                               style: TextStyle(
-                                                fontWeight: FontWeight.w600,
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  96,
+                                                  96,
+                                                  96,
+                                                ),
+                                                fontSize: 13,
                                               ),
-                                              "${(item.price ?? 0) * (item.itemCount ?? 0)}",
+                                              "Color : ${item.color}",
+                                            ),
+                                            SizedBox(width: 15),
+                                            Text(
+                                              style: TextStyle(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  96,
+                                                  96,
+                                                  96,
+                                                ),
+                                                fontSize: 13,
+                                              ),
+                                              "Size : ${item.size}",
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      decreaseItemCount(item.sId),
+                                                  icon: Icon(Icons.remove),
+                                                ),
+                                                SizedBox(width: 4),
+                                                Text(item.itemCount.toString()),
+                                                SizedBox(width: 4),
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      increaseItemCount(item.sId),
+                                                  icon: Icon(Icons.add),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 50),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    size: 14,
+                                                    Icons.currency_rupee_rounded,
+                                                  ),
+                                                  Text(
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                    "${(item.price ?? 0) * (item.itemCount ?? 0)}",
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        top: 6,
-                        right: 0,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(size: 20, color: Colors.red, Icons.delete_outline),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 224, 224, 224),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-                          "Total amount:",
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(size: 20, Icons.currency_rupee),
-                            Text(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-                              getTotalAmount().toStringAsFixed(1),
+                            Positioned(
+                              top: 6,
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () => removeSpecificItem(item.sId, item),
+                                icon: Icon(
+                                  size: 20,
+                                  color: Colors.red,
+                                  Icons.delete_outline,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 5),
-                    Expanded(
-                      child: SizedBox(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: FilledButton(onPressed: () {}, child: Text("data")),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 224, 224, 224),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
                       ),
                     ),
-                  ],
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                ),
+                                "Total amount:",
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(size: 20, Icons.currency_rupee),
+                                  Text(
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                    ),
+                                    getTotalAmount().toStringAsFixed(1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Expanded(
+                            child: SizedBox(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: () {},
+                                child: Text("Checkout"),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

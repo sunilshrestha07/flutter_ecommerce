@@ -28,6 +28,10 @@ class CartItemModel extends HiveObject {
   String? updatedAt;
   @HiveField(11)
   int? itemCount;
+  @HiveField(12)
+  String? size;
+  @HiveField(13)
+  String? color;
 
   CartItemModel({
     this.sId,
@@ -42,6 +46,8 @@ class CartItemModel extends HiveObject {
     this.createdAt,
     this.updatedAt,
     this.itemCount,
+    this.size,
+    this.color,
   });
 
   CartItemModel.fromJson(Map<String, dynamic> json) {
@@ -57,5 +63,7 @@ class CartItemModel extends HiveObject {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     itemCount = json['itemCount'];
+    size = json['size'];
+    color = json['color'];
   }
 }

@@ -29,6 +29,8 @@ class CartItemAdapter extends TypeAdapter<CartItemModel> {
       createdAt: fields[9] as String?,
       updatedAt: fields[10] as String?,
       itemCount: fields[11] as int?,
+      size: fields[10] as String?,
+      color: fields[10] as String?,
     );
   }
 
@@ -59,7 +61,11 @@ class CartItemAdapter extends TypeAdapter<CartItemModel> {
       ..writeByte(10)
       ..write(obj.updatedAt)
       ..writeByte(11)
-      ..write(obj.itemCount);
+      ..write(obj.itemCount)
+      ..writeByte(12)
+      ..write(obj.size)
+      ..writeByte(13)
+      ..write(obj.color);
   }
 
   @override
