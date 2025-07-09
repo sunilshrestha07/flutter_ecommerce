@@ -29,15 +29,15 @@ class CartItemAdapter extends TypeAdapter<CartItemModel> {
       createdAt: fields[9] as String?,
       updatedAt: fields[10] as String?,
       itemCount: fields[11] as int?,
-      size: fields[10] as String?,
-      color: fields[10] as String?,
+      size: fields[12] as String?,
+      color: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CartItemModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.sId)
       ..writeByte(1)

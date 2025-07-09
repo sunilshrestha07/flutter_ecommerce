@@ -1,4 +1,5 @@
 import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
+import 'package:ecommerce/features/checkout/views/checkout.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -13,7 +14,7 @@ class _CartState extends State<Cart> {
   final _cartBox = Hive.box<CartItemModel>("cartItemBox");
   bool isSelected = false;
   List<CartItemModel> _allListInHive = [];
-  List<CartItemModel> _selectedItem = [];
+  final List<CartItemModel> _selectedItem = [];
 
   // method to clear cart
   void clearCart() async {
@@ -144,6 +145,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                   SizedBox(width: 5),
+
                                   Expanded(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -202,19 +204,17 @@ class _CartState extends State<Cart> {
                                                 IconButton(
                                                   onPressed: () =>
                                                       decreaseItemCount(item.sId),
-                                                  icon: Icon(Icons.remove),
+                                                  icon: Icon(size: 18, Icons.remove),
                                                 ),
-                                                SizedBox(width: 4),
                                                 Text(item.itemCount.toString()),
-                                                SizedBox(width: 4),
                                                 IconButton(
                                                   onPressed: () =>
                                                       increaseItemCount(item.sId),
-                                                  icon: Icon(Icons.add),
+                                                  icon: Icon(size: 18, Icons.add),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(width: 50),
+                                            // SizedBox(width: 50),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(
                                                 horizontal: 10,
@@ -309,7 +309,24 @@ class _CartState extends State<Cart> {
                               height: double.infinity,
                               width: double.infinity,
                               child: FilledButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (_selectedItem.isNotEmpty) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            Checkout(item: _selectedItem),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        duration: Durations.long2,
+                                        content: Text("Please select an item!"),
+                                      ),
+                                    );
+                                  }
+                                },
                                 child: Text("Checkout"),
                               ),
                             ),

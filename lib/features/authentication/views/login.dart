@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/authentication/views/forgot.dart';
 import 'package:ecommerce/features/home/views/homepage.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _userBox = Hive.box<UserModel>("userDetailsHiveBox");
   bool isLogging = false;
   final _formKey = GlobalKey<FormState>();
   final _userHiveBox = Hive.box("userHiveBox");
@@ -38,6 +40,10 @@ class _LoginState extends State<Login> {
       );
 
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final user = data['user'] as Map<String, dynamic>;
+        final userDetails = UserModel.fromJson(user);
+        _userBox.put("userDetails", userDetails);
         _userHiveBox.put('isLoggedIn', true);
         setState(() {
           isLogging = false;
