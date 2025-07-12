@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/authentication/views/login.dart';
+import 'package:ecommerce/features/myorders/views/my_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -33,7 +35,7 @@ class _ProfileState extends State<Profile> {
 
   // handel myorder method
   void handeMyOrder() {
-    debugPrint("My order pressed");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyOrders()));
   }
 
   // handel myorder method
@@ -87,15 +89,18 @@ class _ProfileState extends State<Profile> {
                     width: 60,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(1000),
-                      color: Colors.red,
+                      // color: Colors.red,
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(1000),
-                      child: Image.network(
+                      child: CachedNetworkImage(
+                        imageUrl: loggedInUser[0].avatar.toString(),
                         height: double.infinity,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        loggedInUser[0].avatar.toString(),
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
                       ),
                     ),
                   ),
