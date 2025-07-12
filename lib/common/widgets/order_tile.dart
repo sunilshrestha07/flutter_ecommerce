@@ -1,5 +1,6 @@
 import 'package:ecommerce/features/myorders/model/orders_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OrderTile extends StatelessWidget {
   final OrdersModel items;
@@ -10,8 +11,6 @@ class OrderTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        // height: 40,
-        // width: 20,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
@@ -31,18 +30,29 @@ class OrderTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Text(
+                      maxLines: 1,
 
-                    "Order Id: ${items.sId}",
-                  ),
-                  Text(
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: const Color.fromARGB(255, 139, 139, 139),
+                      // overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+
+                      "Order Id: ${items.sId}",
                     ),
-                    // "${items.createdAt}",
-                    "07-15-2025",
+                  ),
+                  Expanded(
+                    child: Text(
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: const Color.fromARGB(255, 139, 139, 139),
+                      ),
+                      // "${items.createdAt}",
+                      DateFormat.yMMMMd().format(
+                        DateTime.parse(items.createdAt.toString()),
+                      ),
+                      // "07-15-2025",
+                    ),
                   ),
                 ],
               ),

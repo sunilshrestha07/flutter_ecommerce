@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:ecommerce/common/widgets/order_tile.dart';
+import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/myorders/model/orders_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class MyOrders extends StatefulWidget {
@@ -18,6 +20,8 @@ class _MyOrdersState extends State<MyOrders> {
   String selectedStatus = "Pending";
   List<OrdersModel> orderDetails = [];
   bool isFetching = false;
+  final _userDeatilsBox = Hive.box<UserModel>("userDetailsHiveBox");
+  List<UserModel> loggedInUser = [];
 
   // method to fetch the orders lists
   Future<void> fetchOrdersDetails() async {
@@ -71,13 +75,19 @@ class _MyOrdersState extends State<MyOrders> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      loggedInUser = _userDeatilsBox.values.toList();
+    });
+    // print(loggedInUser);
     fetchOrdersDetails();
   }
 
   @override
   Widget build(BuildContext context) {
     final List<OrdersModel> filteredOrders = orderDetails
-        .where((item) => item.status == selectedStatus)
+        .where(
+          (item) => item.status == selectedStatus && item.userId == loggedInUser[0].sId,
+        )
         .toList();
     return Scaffold(
       appBar: AppBar(),
