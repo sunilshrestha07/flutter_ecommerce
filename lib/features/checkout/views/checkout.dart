@@ -72,7 +72,7 @@ class _CheckoutState extends State<Checkout> {
                 method: selectedPayment,
               ),
             );
-            Timer(Duration(seconds: 2), () {
+            Timer(Duration(milliseconds: 1500), () {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Homepage()),

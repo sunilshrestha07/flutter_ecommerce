@@ -50,34 +50,6 @@ class CategoryBasedItemtile extends StatelessWidget {
                     child: Image.network(allItems.image.toString(), fit: BoxFit.cover),
                   ),
                 ),
-                // Positioned(
-                //   top: 7,
-                //   left: 7,
-                //   child: Container(
-                //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                //     decoration: BoxDecoration(
-                //       color: allItems.sale! ? Colors.red : Colors.black,
-                //       borderRadius: BorderRadius.circular(20),
-                //     ),
-                //     child: allItems.sale!
-                //         ? Text(
-                //             style: TextStyle(
-                //               fontSize: 15,
-                //               fontWeight: FontWeight.w500,
-                //               color: Colors.white,
-                //             ),
-                //             " -" + allItems.discount.toString() + " %",
-                //           )
-                //         : Text(
-                //             style: TextStyle(
-                //               fontSize: 15,
-                //               fontWeight: FontWeight.w500,
-                //               color: Colors.white,
-                //             ),
-                //             "  New ",
-                //           ),
-                //   ),
-                // ),
               ],
             ),
             // about the item info card

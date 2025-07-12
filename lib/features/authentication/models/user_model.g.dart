@@ -24,8 +24,9 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       isAdmin: fields[5] as bool?,
       verificationCode: fields[6] as String?,
       verificationExpires: fields[7] as DateTime?,
-      createdAt: fields[8] as String?,
-      updatedAt: fields[9] as String?,
+      avatar: fields[8] as String?,
+      createdAt: fields[9] as String?,
+      updatedAt: fields[10] as String?,
     );
   }
 
@@ -48,6 +49,8 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(7)
       ..write(obj.verificationExpires)
       ..writeByte(8)
+      ..write(obj.avatar)
+      ..writeByte(9)
       ..write(obj.createdAt)
       ..writeByte(9)
       ..write(obj.updatedAt);

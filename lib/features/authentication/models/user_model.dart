@@ -17,10 +17,12 @@ class UserModel extends HiveObject {
   @HiveField(6)
   String? verificationCode;
   @HiveField(7)
-  DateTime? verificationExpires;
+  String? avatar;
   @HiveField(8)
-  String? createdAt;
+  DateTime? verificationExpires;
   @HiveField(9)
+  String? createdAt;
+  @HiveField(10)
   String? updatedAt;
 
   UserModel({
@@ -31,6 +33,7 @@ class UserModel extends HiveObject {
     this.isAdmin,
     this.verificationCode,
     this.verificationExpires,
+    this.avatar,
     this.createdAt,
     this.updatedAt,
   });
@@ -43,6 +46,7 @@ class UserModel extends HiveObject {
     isAdmin = json['isAdmin'];
     verificationCode = json['verificationCode'];
     verificationExpires = json['verificationExpires'];
+    avatar = json['avatar'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
