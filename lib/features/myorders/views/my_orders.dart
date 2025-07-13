@@ -99,7 +99,7 @@ class _MyOrdersState extends State<MyOrders> {
             Text(
               textAlign: TextAlign.start,
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              "My Profile",
+              "My Orders",
             ),
 
             SizedBox(height: 15),

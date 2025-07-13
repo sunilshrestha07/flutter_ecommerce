@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/authentication/views/login.dart';
 import 'package:ecommerce/features/myorders/views/my_orders.dart';
+import 'package:ecommerce/features/myreview/views/my_reviews.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -40,7 +41,7 @@ class _ProfileState extends State<Profile> {
 
   // handel myorder method
   void handelMyreview() {
-    debugPrint("My review pressed");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyReviews()));
   }
 
   // handel myorder method
