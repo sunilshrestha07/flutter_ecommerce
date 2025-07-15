@@ -71,8 +71,16 @@ class ReviewTile extends StatelessWidget {
                             children: [
                               ...List.generate(
                                 5,
-                                (int index) =>
-                                    Icon(color: Colors.amber, size: 20, Icons.star),
+                                (int index) => Icon(
+                                  color: index < (items.rating ?? 0)
+                                      ? Colors.amber
+                                      : Colors.blueGrey,
+                                  size: 20,
+                                  // Icons.star,
+                                  (index < (items.rating ?? 0)
+                                      ? Icons.star
+                                      : Icons.star_border_outlined),
+                                ),
                               ),
                             ],
                           ),
@@ -80,18 +88,6 @@ class ReviewTile extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // Expanded(
-                  //   child: Text(
-                  //     textAlign: TextAlign.end,
-                  //     style: TextStyle(
-                  //       fontWeight: FontWeight.w500,
-                  //       color: const Color.fromARGB(255, 139, 139, 139),
-                  //     ),
-
-                  //     "07-15-2025",
-                  //   ),
-                  // ),
                 ],
               ),
               SizedBox(height: 10),

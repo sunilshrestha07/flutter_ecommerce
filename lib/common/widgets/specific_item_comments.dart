@@ -1,6 +1,8 @@
 import 'package:ecommerce/common/model/review_model.dart';
+import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -17,11 +19,19 @@ class SpecificItemComments extends StatefulWidget {
 
 class _SpecificItemCommentsState extends State<SpecificItemComments> {
   final _reviewController = TextEditingController();
+  final _userBox = Hive.box<UserModel>("userDetailsHiveBox");
+  int rating = 0;
+  String reviewMessage = "";
   List<reviewmodel> allReviews = [];
+  List<UserModel> loggedInUser = [];
+  bool isFetching = false;
 
   // method to fetch the review
   Future<void> fetchReview() async {
     try {
+      setState(() {
+        isFetching = true;
+      });
       final url = "https://fashion-fusion-suneel.vercel.app/api/review/${widget.sId}";
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -29,16 +39,75 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
         final List review = data['reviews'];
         setState(() {
           allReviews = review.map((json) => reviewmodel.fromJson(json)).toList();
+          isFetching = false;
+        });
+      } else {
+        debugPrint("error fetching the review");
+        setState(() {
+          isFetching = false;
         });
       }
     } catch (e) {
       debugPrint(e.toString());
+      setState(() {
+        isFetching = false;
+      });
+    }
+  }
+
+  //handelReviewSubmit
+  Future<void> handelReviewSubmit() async {
+    try {
+      final Map<String, dynamic> formData = {
+        "rating": rating,
+        "comment": reviewMessage,
+        "postId": widget.sId,
+        "userId": loggedInUser[0].sId,
+        "userName": loggedInUser[0].userName,
+        "userImage": loggedInUser[0].avatar,
+      };
+      final url = "https://fashion-fusion-suneel.vercel.app/api/review";
+      final res = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(formData),
+      );
+
+      if (res.statusCode == 200) {
+        await fetchReview();
+        ScaffoldMessenger.of(
+          // ignore: use_build_context_synchronously
+          context,
+        ).showSnackBar(
+          SnackBar(backgroundColor: Colors.green, content: Text("Review successful")),
+        );
+      } else {
+        ScaffoldMessenger.of(
+          // ignore: use_build_context_synchronously
+          context,
+        ).showSnackBar(
+          SnackBar(backgroundColor: Colors.red, content: Text("Review submition error")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        // ignore: use_build_context_synchronously
+        context,
+      ).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("Error submmiting review $e"),
+        ),
+      );
     }
   }
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      loggedInUser = _userBox.values.toList();
+    });
     fetchReview();
   }
 
@@ -66,19 +135,22 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
                 fontWeight: FontWeight.bold,
                 color: Colors.red,
               ),
-              "Leave a review",
+              // "Leave a review",
+              widget.sId,
             ),
           ),
 
           // star rating
           RatingBar.builder(
             maxRating: 5,
-            initialRating: 1,
-            allowHalfRating: true,
+            initialRating: 0,
+            allowHalfRating: false,
             itemSize: 30,
             itemBuilder: (context, _) => Icon(color: Colors.amber, Icons.star),
             onRatingUpdate: (e) {
-              debugPrint("Total rating $e");
+              setState(() {
+                rating = e.toInt();
+              });
             },
           ),
 
@@ -88,6 +160,11 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
               child: TextFormField(
+                onChanged: (e) {
+                  setState(() {
+                    reviewMessage = e;
+                  });
+                },
                 controller: _reviewController,
                 decoration: InputDecoration(hint: Text("Give your review")),
                 maxLines: 5,
@@ -99,7 +176,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: FilledButton(onPressed: () {}, child: Text("Submit")),
+            child: FilledButton(onPressed: handelReviewSubmit, child: Text("Submit")),
           ),
 
           SizedBox(height: 40),
@@ -141,10 +218,15 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
                     children: [
                       SizedBox(height: 20),
                       Center(
-                        child: Text(
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-                          "No reviews",
-                        ),
+                        child: isFetching
+                            ? Center(child: CircularProgressIndicator())
+                            : Text(
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                ),
+                                "No reviews",
+                              ),
                       ),
                     ],
                   ),

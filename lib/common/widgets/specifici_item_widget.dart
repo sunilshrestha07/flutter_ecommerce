@@ -178,7 +178,7 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                           textAlign: TextAlign.right,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          widget.item.name.toString(),
+                          widget.item.sId.toString(),
                         ),
                         Row(
                           children: [

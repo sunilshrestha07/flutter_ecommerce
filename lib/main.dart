@@ -3,6 +3,7 @@ import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,8 @@ import 'package:path_provider/path_provider.dart' as path;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();  // onle when uisng the mobile
+
   // find the path of the app
   final dir = await path.getApplicationDocumentsDirectory();
   // initialize the hive
