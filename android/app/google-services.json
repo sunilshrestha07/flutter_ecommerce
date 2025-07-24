@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "450062940603",
-    "project_id": "flutterecommerce-e7f4f",
-    "storage_bucket": "flutterecommerce-e7f4f.firebasestorage.app"
+    "project_number": "938770112002",
+    "project_id": "fashion-fusion-ed6ac",
+    "storage_bucket": "fashion-fusion-ed6ac.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:450062940603:android:7b002a85cb2e6fa47a2c9e",
+        "mobilesdk_app_id": "1:938770112002:android:9346998ad8e6f85d86d11b",
         "android_client_info": {
-          "package_name": "com.example.ecommerce"
+          "package_name": "com.suneel.fashionfusion"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "938770112002-4bt127fm2e5gqinopsf0im8a7hrgfebq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suneel.fashionfusion",
+            "certificate_hash": "d46b9b215d805d2985e443d31bf9d670c39c0693"
+          }
+        },
+        {
+          "client_id": "938770112002-1c5r3hpjjn39d7k1ed3pu8rket4tths0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDF-NCJGXurkjkORyqN9qfR5R43dN5OLhA"
+          "current_key": "AIzaSyC3nDJ88nvoO3scNhX-08AERELooumORXo"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938770112002-1c5r3hpjjn39d7k1ed3pu8rket4tths0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "938770112002-j715e2lo710bq8pf7p6fno7tr6ktci2j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.suneel.fashionfusion"
+              }
+            }
+          ]
         }
       }
     }

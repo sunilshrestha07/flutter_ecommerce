@@ -4,6 +4,7 @@ import 'package:ecommerce/features/authentication/views/login.dart';
 import 'package:ecommerce/features/myorders/views/my_orders.dart';
 import 'package:ecommerce/features/myreview/views/my_reviews.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Profile extends StatefulWidget {
@@ -49,9 +50,11 @@ class _ProfileState extends State<Profile> {
     debugPrint("My settings pressed");
   }
 
-  void handelLogout() {
+  void handelLogout() async {
+    await GoogleSignIn().signOut();
     _hiveuserBox.put("isLoggedIn", false);
     Navigator.pushAndRemoveUntil(
+      // ignore: use_build_context_synchronously
       context,
       MaterialPageRoute(builder: (context) => Login()),
       (route) => false,
@@ -63,7 +66,7 @@ class _ProfileState extends State<Profile> {
     final itemsToShow = profileOptions.entries.toList();
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(toolbarHeight: 10),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

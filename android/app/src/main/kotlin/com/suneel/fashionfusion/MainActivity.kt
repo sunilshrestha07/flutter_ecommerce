@@ -1,4 +1,4 @@
-package com.example.ecommerce
+package com.suneel.fashionfusion
 
 import io.flutter.embedding.android.FlutterActivity
 

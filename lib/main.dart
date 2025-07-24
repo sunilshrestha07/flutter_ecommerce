@@ -2,6 +2,7 @@ import 'package:ecommerce/app_home.dart';
 import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
+import 'package:ecommerce/firebase_options.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ import 'package:path_provider/path_provider.dart' as path;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();  // onle when uisng the mobile
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // onle when uisng the mobile
 
   // find the path of the app
   final dir = await path.getApplicationDocumentsDirectory();

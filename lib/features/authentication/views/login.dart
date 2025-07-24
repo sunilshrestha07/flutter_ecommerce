@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ecommerce/common/widgets/oauth.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/authentication/views/forgot.dart';
 import 'package:ecommerce/features/home/views/homepage.dart';
@@ -183,32 +184,7 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 60),
 
                     // google login
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          backgroundColor: WidgetStateProperty.all(Colors.white),
-                        ),
-                        onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              style: TextStyle(color: Colors.black, fontSize: 15),
-                              "continue with google",
-                            ),
-                            SizedBox(width: 10),
-                            Image.asset(width: 15, height: 15, "assets/icons/google.png"),
-                          ],
-                        ),
-                      ),
-                    ),
+                    Oauth(),
                   ],
                 ),
               ),
