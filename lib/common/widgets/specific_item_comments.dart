@@ -25,6 +25,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
   List<reviewmodel> allReviews = [];
   List<UserModel> loggedInUser = [];
   bool isFetching = false;
+  bool isUploading = false;
 
   // method to fetch the review
   Future<void> fetchReview() async {
@@ -58,6 +59,9 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
   //handelReviewSubmit
   Future<void> handelReviewSubmit() async {
     try {
+      setState(() {
+        isUploading = true;
+      });
       final Map<String, dynamic> formData = {
         "rating": rating,
         "comment": reviewMessage,
@@ -74,6 +78,12 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
       );
 
       if (res.statusCode == 200) {
+        setState(() {
+          isUploading = false;
+          reviewMessage = " ";
+          rating = 0;
+          _reviewController.clear();
+        });
         await fetchReview();
         ScaffoldMessenger.of(
           // ignore: use_build_context_synchronously
@@ -82,6 +92,9 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
           SnackBar(backgroundColor: Colors.green, content: Text("Review successful")),
         );
       } else {
+        setState(() {
+          isUploading = false;
+        });
         ScaffoldMessenger.of(
           // ignore: use_build_context_synchronously
           context,
@@ -90,6 +103,9 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
         );
       }
     } catch (e) {
+      setState(() {
+        isUploading = false;
+      });
       ScaffoldMessenger.of(
         // ignore: use_build_context_synchronously
         context,
@@ -143,7 +159,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
           // star rating
           RatingBar.builder(
             maxRating: 5,
-            initialRating: 0,
+            initialRating: rating.toDouble(),
             allowHalfRating: false,
             itemSize: 30,
             itemBuilder: (context, _) => Icon(color: Colors.amber, Icons.star),
@@ -176,7 +192,22 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: FilledButton(onPressed: handelReviewSubmit, child: Text("Submit")),
+            child: FilledButton(
+              onPressed: handelReviewSubmit,
+              child: isUploading
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Text("Submit"),
+            ),
           ),
 
           SizedBox(height: 40),
