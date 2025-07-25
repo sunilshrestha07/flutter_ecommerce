@@ -3,6 +3,7 @@ import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:ecommerce/features/authentication/views/login.dart';
 import 'package:ecommerce/features/myorders/views/my_orders.dart';
 import 'package:ecommerce/features/myreview/views/my_reviews.dart';
+import 'package:ecommerce/features/setting/views/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -47,7 +48,7 @@ class _ProfileState extends State<Profile> {
 
   // handel myorder method
   void handelMysettings() {
-    debugPrint("My settings pressed");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Setting()));
   }
 
   void handelLogout() async {
