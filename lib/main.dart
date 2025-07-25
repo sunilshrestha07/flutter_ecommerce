@@ -9,10 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(
+    url: "https://fjxefyalmgsjpnshzver.supabase.co",
+    anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqeGVmeWFsbWdzanBuc2h6dmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NDEzMTMsImV4cCI6MjA2OTAxNzMxM30.TAfROyyBjEzz4NjJrw3AREylJpOtAR431pOqZ3f3H3c",
+  );
   // onle when uisng the mobile
 
   // find the path of the app

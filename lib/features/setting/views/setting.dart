@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -20,9 +23,13 @@ class _SettingState extends State<Setting> {
   final _userDeatilsBox = Hive.box<UserModel>("userDetailsHiveBox");
   List<UserModel> loggedInUser = [];
   bool isUpdating = false;
+  File? selectedImage;
 
   // handel userupdate
   Future handelProfileUpdate() async {
+    setState(() {
+      isUpdating = true;
+    });
     final Map<String, dynamic> formData = {};
     if (_emailController.text.isNotEmpty) {
       formData.addAll({"email": _emailController.text.trim()});
@@ -32,6 +39,11 @@ class _SettingState extends State<Setting> {
     }
     if (_password.text.isNotEmpty) {
       formData.addAll({"password": _password.text.trim()});
+    }
+
+    if (selectedImage != null) {
+      final imageUrl = await imageUpload();
+      formData.addAll({"avatar": imageUrl});
     }
 
     if (formData.isEmpty) {
@@ -48,9 +60,6 @@ class _SettingState extends State<Setting> {
       return;
     }
     try {
-      setState(() {
-        isUpdating = true;
-      });
       final res = await http.put(
         Uri.parse(
           "https://fashion-fusion-suneel.vercel.app/api/user/${loggedInUser[0].sId}",
@@ -113,12 +122,55 @@ class _SettingState extends State<Setting> {
     }
   }
 
+  // handel image upload
+  Future handelImagePick() async {
+    try {
+      XFile? imageSelected = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      // convert the image to url
+      setState(() {
+        selectedImage = File(imageSelected!.path);
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     setState(() {
       loggedInUser = _userDeatilsBox.values.toList();
     });
+  }
+
+  // handel image upload
+  Future<String?> imageUpload() async {
+    if (selectedImage != null) {
+      // handel image upload to supabase
+      try {
+        final fileName = DateTime.now().microsecondsSinceEpoch.toString();
+        final path = "uploads/$fileName";
+
+        final storage = Supabase.instance.client.storage.from('image');
+        await storage.upload(path, selectedImage!);
+
+        final publicLink = storage.getPublicUrl(path);
+        return publicLink;
+      } catch (e) {
+        ScaffoldMessenger.of(
+          // ignore: use_build_context_synchronously
+          context,
+        ).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 1),
+            backgroundColor: Colors.red,
+            content: Text("Error image upload "),
+          ),
+        );
+        return null;
+      }
+    }
   }
 
   @override
@@ -136,12 +188,23 @@ class _SettingState extends State<Setting> {
                     radius: 70,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(1000),
-                      child: CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        height: double.infinity,
-                        width: double.infinity,
-                        imageUrl: loggedInUser[0].avatar.toString(),
-                        placeholder: (context, url) => CircularProgressIndicator(),
+                      child: GestureDetector(
+                        onTap: handelImagePick,
+                        child: selectedImage != null
+                            ? Image.file(
+                                height: double.infinity,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                selectedImage!,
+                              )
+                            : CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                height: double.infinity,
+                                width: double.infinity,
+                                imageUrl: loggedInUser[0].avatar.toString(),
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                              ),
                       ),
                     ),
                   ),
