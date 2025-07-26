@@ -2,14 +2,19 @@ import 'package:ecommerce/app_home.dart';
 import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
+import 'package:ecommerce/features/home/views/homepage.dart';
 import 'package:ecommerce/firebase_options.dart';
+import 'package:ecommerce/services/notification_service.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+Future<void> _backgroundMessaging(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +24,8 @@ void main() async {
     anonKey:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqeGVmeWFsbWdzanBuc2h6dmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NDEzMTMsImV4cCI6MjA2OTAxNzMxM30.TAfROyyBjEzz4NjJrw3AREylJpOtAR431pOqZ3f3H3c",
   );
-  // onle when uisng the mobile
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessaging);
+  await NotificationService().initNotification();
 
   // find the path of the app
   final dir = await path.getApplicationDocumentsDirectory();

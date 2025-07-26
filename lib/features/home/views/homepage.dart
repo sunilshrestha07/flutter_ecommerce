@@ -5,6 +5,8 @@ import 'package:ecommerce/features/cart/views/cart.dart';
 import 'package:ecommerce/features/home/views/home.dart';
 import 'package:ecommerce/features/profile/views/profile.dart';
 import 'package:ecommerce/features/store/views/store.dart';
+import 'package:ecommerce/services/notification_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -74,10 +76,43 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  // initialize the app for the notification
+  void firebaseMessaging() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    // get the fcm token
+    String? fcmtoken = await messaging.getToken();
+    debugPrint("FcmToken: $fcmtoken");
+
+    // show the message if the app is active
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      final String title = message.notification?.title ?? "NA";
+      final String body = message.notification?.body ?? "Na";
+      NotificationService().showNotification(title: title, body: body);
+    });
+
+    // show the message if the app is in the backgorund
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      final String title = message.notification?.title ?? "NA";
+      final String body = message.notification?.body ?? "Na";
+      NotificationService().showNotification(title: title, body: body);
+    });
+
+    // show the message if the app is active
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        final String title = message.notification?.title ?? "NA";
+        final String body = message.notification?.body ?? "Na";
+        NotificationService().showNotification(title: title, body: body);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fetchData();
+    firebaseMessaging();
   }
 
   @override
@@ -88,36 +123,39 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: isFetching
-          ? Center(child: CircularProgressIndicator())
-          : Center(child: pages[cuttentPageIndex]),
+    return RefreshIndicator(
+      onRefresh: fetchData,
+      child: Scaffold(
+        body: isFetching
+            ? Center(child: CircularProgressIndicator())
+            : Center(child: pages[cuttentPageIndex]),
 
-      bottomNavigationBar: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(200),
-          child: BottomNavigationBar(
-            onTap: (int newIndex) {
-              setState(() {
-                cuttentPageIndex = newIndex;
-              });
-            },
-            currentIndex: cuttentPageIndex,
-            unselectedIconTheme: IconThemeData(color: Colors.black),
-            showUnselectedLabels: true,
-            elevation: 5,
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(icon: const Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(icon: const Icon(Icons.store), label: "Store"),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.shopping_bag_outlined),
-                label: "Cart",
-              ),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-            ],
+        bottomNavigationBar: Container(
+          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(200),
+            child: BottomNavigationBar(
+              onTap: (int newIndex) {
+                setState(() {
+                  cuttentPageIndex = newIndex;
+                });
+              },
+              currentIndex: cuttentPageIndex,
+              unselectedIconTheme: IconThemeData(color: Colors.black),
+              showUnselectedLabels: true,
+              elevation: 5,
+              type: BottomNavigationBarType.fixed,
+              items: [
+                BottomNavigationBarItem(icon: const Icon(Icons.home), label: "Home"),
+                BottomNavigationBarItem(icon: const Icon(Icons.store), label: "Store"),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.shopping_bag_outlined),
+                  label: "Cart",
+                ),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+              ],
+            ),
           ),
         ),
       ),
