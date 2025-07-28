@@ -151,8 +151,7 @@ class _SpecificItemCommentsState extends State<SpecificItemComments> {
                 fontWeight: FontWeight.bold,
                 color: Colors.red,
               ),
-              // "Leave a review",
-              widget.sId,
+              "Leave a review",
             ),
           ),
 

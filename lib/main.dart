@@ -2,7 +2,6 @@ import 'package:ecommerce/app_home.dart';
 import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/provider/item_provider.dart';
 import 'package:ecommerce/features/authentication/models/user_model.dart';
-import 'package:ecommerce/features/home/views/homepage.dart';
 import 'package:ecommerce/firebase_options.dart';
 import 'package:ecommerce/services/notification_service.dart';
 import 'package:ecommerce/utils/theme/app_theme.dart';

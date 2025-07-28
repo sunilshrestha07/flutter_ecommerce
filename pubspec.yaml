@@ -52,6 +52,7 @@ dependencies:
   supabase_flutter: ^2.9.1
   firebase_messaging: ^15.2.10
   flutter_local_notifications: ^19.4.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,12 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/icon.png"
+  adaptive_icon_background: "#B30D0D"
+  adaptive_icon_foreground: "assets/icons/icon.png"
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -77,6 +84,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
 
   # To add assets to your application, add an assets section, like this:
   assets:

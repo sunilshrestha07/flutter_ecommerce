@@ -52,6 +52,7 @@ class _OauthState extends State<Oauth> {
               final userDetails = UserModel.fromJson(user);
               _userBox.put("userDetails", userDetails);
               _userHiveBox.put('isLoggedIn', true);
+              handelFcmStore();
             }
 
             if (data.containsKey("isNewuser")) {

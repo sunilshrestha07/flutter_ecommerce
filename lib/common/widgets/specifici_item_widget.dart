@@ -2,6 +2,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:ecommerce/common/hiveobject/cart_item_model.dart';
 import 'package:ecommerce/common/model/itemModel.dart';
 import 'package:ecommerce/common/widgets/specific_item_comments.dart';
+import 'package:ecommerce/features/checkout/views/checkout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -43,7 +44,13 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
     );
 
     final key = item.sId;
-
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.green,
+        content: Text("Added to Cart"),
+      ),
+    );
     // if same item exist increase the item count else add to the box
     if (_cartBox.containsKey(key)) {
       final existingItem = _cartBox.get(key);
@@ -52,6 +59,30 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
     } else {
       _cartBox.put(key, newItem);
     }
+  }
+
+  // handel buy Now
+  void handelBuy(itemsModel item) async {
+    final newItem = CartItemModel(
+      sId: item.sId,
+      name: item.name,
+      image: item.image,
+      description: item.description,
+      price: item.price,
+      discount: item.discount,
+      category: item.category,
+      sale: item.sale,
+      rating: item.rating,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
+      itemCount: 1,
+      color: selectedColor,
+      size: selectedSize,
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Checkout(item: [newItem])),
+    );
   }
 
   @override
@@ -126,7 +157,7 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                 children: [
                   Expanded(
                     child: CustomDropdown<String>(
-                      hintText: 'Select job role',
+                      hintText: 'Select',
                       items: itemSizesOptions,
                       initialItem: itemSizesOptions[0],
                       onChanged: (value) {
@@ -178,7 +209,7 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                           textAlign: TextAlign.right,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          widget.item.sId.toString(),
+                          widget.item.name.toString(),
                         ),
                         Row(
                           children: [
@@ -217,7 +248,7 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                               ),
                               backgroundColor: WidgetStateProperty.all(Colors.red),
                             ),
-                            onPressed: () {},
+                            onPressed: () => handelBuy(widget.item),
                             child: Text(
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                               "Buy Now",
