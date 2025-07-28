@@ -25,6 +25,7 @@ void main() async {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqeGVmeWFsbWdzanBuc2h6dmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0NDEzMTMsImV4cCI6MjA2OTAxNzMxM30.TAfROyyBjEzz4NjJrw3AREylJpOtAR431pOqZ3f3H3c",
     );
     FirebaseMessaging.onBackgroundMessage(_backgroundMessaging);
+
     await NotificationService().initNotification();
 
     // find the path of the app

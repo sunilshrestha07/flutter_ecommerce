@@ -177,98 +177,100 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 70,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(1000),
-                      child: GestureDetector(
-                        onTap: handelImagePick,
-                        child: selectedImage != null
-                            ? Image.file(
-                                height: double.infinity,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                                selectedImage!,
-                              )
-                            : CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                height: double.infinity,
-                                width: double.infinity,
-                                imageUrl: loggedInUser[0].avatar.toString(),
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                              ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                    loggedInUser[0].userName.toString(),
-                  ),
-                  Text(
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                    loggedInUser[0].email.toString(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _username,
-                        decoration: InputDecoration(label: Text("Username")),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(label: Text("Email")),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _password,
-                        decoration: InputDecoration(labelText: "New password"),
-                      ),
-
-                      SizedBox(height: 40),
-                      SizedBox(
-                        width: 160,
-                        height: 40,
-                        child: FilledButton(
-                          onPressed: handelProfileUpdate,
-                          child: isUpdating
-                              ? SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
+                Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 70,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(1000),
+                        child: GestureDetector(
+                          onTap: handelImagePick,
+                          child: selectedImage != null
+                              ? Image.file(
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  selectedImage!,
                                 )
-                              : Text("Update"),
+                              : CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  imageUrl: loggedInUser[0].avatar.toString(),
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      loggedInUser[0].userName.toString(),
+                    ),
+                    Text(
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                      loggedInUser[0].email.toString(),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-        ],
+            SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Form(
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _username,
+                          decoration: InputDecoration(label: Text("Username")),
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: InputDecoration(label: Text("Email")),
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
+                          controller: _password,
+                          decoration: InputDecoration(labelText: "New password"),
+                        ),
+
+                        SizedBox(height: 40),
+                        SizedBox(
+                          width: 160,
+                          height: 40,
+                          child: FilledButton(
+                            onPressed: handelProfileUpdate,
+                            child: isUpdating
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text("Update"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

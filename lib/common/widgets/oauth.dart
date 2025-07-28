@@ -45,6 +45,8 @@ class _OauthState extends State<Oauth> {
           if (res.statusCode == 200) {
             final data = jsonDecode(res.body);
             if (data.containsKey("user")) {
+              print(data);
+
               final user = data['user'] as Map<String, dynamic>;
               setState(() {
                 isNewUser = false;
@@ -56,6 +58,7 @@ class _OauthState extends State<Oauth> {
             }
 
             if (data.containsKey("isNewuser")) {
+              print(data);
               setState(() {
                 isNewUser = true;
               });
@@ -101,6 +104,8 @@ class _OauthState extends State<Oauth> {
         body: jsonEncode(formdata),
       );
       if (res.statusCode == 200) {
+        print("updated");
+
         if (isNewUser) {
           Future.delayed(Duration(seconds: 4), () {
             handelPwChangeNotify();
@@ -114,6 +119,7 @@ class _OauthState extends State<Oauth> {
 
   // handel the change pw notificaiton
   Future handelPwChangeNotify() async {
+    print("trdfsdjflsjd ");
     try {
       final res = await http.post(
         Uri.parse("https://fashion-fusion-suneel.vercel.app/api/notifypwchange/$email"),

@@ -1,46 +1,50 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
-  // Create the instance for the notifications plugin
+  // Singleton instance
+  static final NotificationService _instance = NotificationService._internal();
+
+  factory NotificationService() => _instance;
+
+  NotificationService._internal();
+
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // Define your Android notification channel info here:
   static const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
-    "default_channel", // Must match ID used in AndroidManifest.xml if you define it there
+    "default_channel",
     "Default Channel",
     description: "Daily notification channel",
     importance: Importance.high,
   );
 
-  // Initialize the notifications plugin
+  bool _isInitialized = false;
+
   Future<void> initNotification() async {
-    // Android initialization
+    if (_isInitialized) return;
+
     const initSettingAndroid = AndroidInitializationSettings("@mipmap/ic_launcher");
 
-    // iOS initialization
     const initSettingIos = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    // Initialization settings for both platforms
     const initSetting = InitializationSettings(
       android: initSettingAndroid,
       iOS: initSettingIos,
     );
 
-    // Initialize the plugin
     await notificationsPlugin.initialize(initSetting);
 
-    // Create the Android notification channel (required for Android 8+)
     final androidImpl = notificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     await androidImpl?.createNotificationChannel(androidChannel);
+
+    _isInitialized = true; // Mark as initialized
   }
 
-  // Notification details helper
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
@@ -54,8 +58,7 @@ class NotificationService {
     );
   }
 
-  // Show a notification with given title and body
   Future<void> showNotification({int id = 0, String? title, String? body}) async {
-    return notificationsPlugin.show(id, title, body, notificationDetails());
+    await notificationsPlugin.show(id, title, body, notificationDetails());
   }
 }
