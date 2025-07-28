@@ -11,9 +11,8 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        // ✅ Correct way to enable desugaring in Kotlin DSL
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
 

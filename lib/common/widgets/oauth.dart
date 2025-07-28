@@ -60,13 +60,11 @@ class _OauthState extends State<Oauth> {
                 isNewUser = true;
               });
               final user = data['isNewuser'] as Map<String, dynamic>;
-
               final userDetails = UserModel.fromJson(user);
               _userBox.put("userDetails", userDetails);
               _userHiveBox.put('isLoggedIn', true);
               handelFcmStore();
             }
-            // handel the fcm store if google signup is success
 
             Navigator.pushAndRemoveUntil(
               // ignore: use_build_context_synchronously
@@ -90,8 +88,6 @@ class _OauthState extends State<Oauth> {
     }
   }
 
-  // get the fcm token
-
   // handel fcm store in the database
   Future handelFcmStore() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -105,7 +101,6 @@ class _OauthState extends State<Oauth> {
         body: jsonEncode(formdata),
       );
       if (res.statusCode == 200) {
-        debugPrint(res.body);
         if (isNewUser) {
           Future.delayed(Duration(seconds: 4), () {
             handelPwChangeNotify();

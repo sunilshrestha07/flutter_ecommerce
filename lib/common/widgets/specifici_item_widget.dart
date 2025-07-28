@@ -203,29 +203,35 @@ class _SpecificiItemWidgetState extends State<SpecificiItemWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          textAlign: TextAlign.right,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          widget.item.name.toString(),
+                        Expanded(
+                          child: Text(
+                            textAlign: TextAlign.start,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            widget.item.name.toString(),
+                          ),
                         ),
+                        SizedBox(width: 20),
                         Row(
                           children: [
-                            Icon(Icons.currency_rupee_sharp),
+                            Icon(size: 18, Icons.currency_rupee_sharp),
 
                             Text(
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               widget.item.price.toString(),
                             ),
                           ],
                         ),
                       ],
                     ),
+
                     // discrtition
                     Text(
-                      maxLines: 6,
+                      maxLines: 7,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 15,

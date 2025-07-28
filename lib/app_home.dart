@@ -9,10 +9,10 @@ class AppHome extends StatefulWidget {
   const AppHome({super.key});
 
   @override
-  State<AppHome> createState() => _AppState();
+  State<AppHome> createState() => _AppHomeState();
 }
 
-class _AppState extends State<AppHome> {
+class _AppHomeState extends State<AppHome> {
   final _userHive = Hive.box("userHiveBox");
   bool isLoggedIn = false;
 
@@ -21,39 +21,39 @@ class _AppState extends State<AppHome> {
     super.initState();
 
     isLoggedIn = _userHive.get("isLoggedIn", defaultValue: false);
-    Timer(
-      Duration(seconds: 2),
-      // debugPrint("isLoggedIn: ${isLoggedIn.toString()}");
-      () {
+
+    // Ensures safe navigation after build is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(seconds: 2), () {
         if (isLoggedIn == true) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Homepage()),
+            MaterialPageRoute(builder: (context) => const Homepage()),
             (Route<dynamic> route) => false,
           );
         } else {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => Onboardingmain()),
+            MaterialPageRoute(builder: (context) => const Onboardingmain()),
             (Route<dynamic> route) => false,
           );
         }
-      },
-    );
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.red,
       body: Center(
         child: Text(
+          "Fashion Fusion",
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
-          "Fashion Fusion",
         ),
       ),
     );
